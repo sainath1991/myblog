@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * Implements hook_preprocess_block hook.
+ */
+function blog_preprocess_block(&$vars) {
+  $config = \Drupal::config('system.site');
+  $siteName = $config->get('name');
+  $id = $vars['elements']['#id'];
+  $vars['sitename'] = $siteName;
+  if ($id === 'blog_main_menu') {
+    $vars['attributes']['class'] = [
+      'navbar', 'navbar-default',  'navbar-custom',  'navbar-fixed-top',
+    ];
+  }
+}
+
+function blog_preprocess_views_view__blog_content__block_1(&$vars) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof \Drupal\node\NodeInterface) {
+    // You can get nid and anything else you need from the node object.
+    $fileUrl = $node->get('field_image')->entity->uri->value;
+    $vars['fileUrl'] = $fileUrl;
+  }
+  $vars['attributes']['class'][] = 'intro-header';
+}
+
+function blog_preprocess_views_view_unformatted__blog_content__block_1(&$vars) {
+  $vars['extra_class'] = ['row'];
+  $vars['inner_classes'] = ['col-lg-8', 'col-lg-offset-2',  'col-md-10',  'col-md-offset-1'];
+  $vars['site_heading'] = ['site-heading'];
+}
+
+function blog_preprocess_views_view__blog_content__block_2(&$vars) {  
+  $vars['attributes']['class'] = ['col-lg-8', 'col-lg-offset-2', 'col-md-10', 'col-md-offset-1'];
+}
+
+function blog_preprocess_views_view_unformatted__blog_content__block_2(&$vars) {
+  $vars['addClass'] = 'post-preview';
+}
+
+function blog_preprocess_node(&$vars) {
+  $vars['attributes']['class'] = [
+    'col-lg-8',
+    'col-lg-offset-2',
+    'col-md-10',
+    'col-md-offset-1',
+  ];
+}
